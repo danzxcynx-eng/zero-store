@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zero Store — Marketplace Jual Beli</title>
+<meta name="description" content="Zero Store — marketplace jual beli. Cari, pasang, dan kelola listing.">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Arial;background:#f6f7fb;color:#141722}a{text-decoration:none;color:inherit}
+.wrap{width:min(1120px,92%);margin:auto}header{background:#fff;border-bottom:1px solid #e7e8ee;position:sticky;top:0;z-index:5}
+nav{height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}.logo{font-size:22px;font-weight:900}.logo i{font-style:normal;color:#5b5bf7}.links{display:flex;gap:22px;color:#606778;font-size:14px}.actions{display:flex;gap:8px;align-items:center}
+.btn{border:0;border-radius:11px;padding:11px 15px;font-weight:750;cursor:pointer}.primary{background:#5b5bf7;color:#fff}.soft{background:#ececff;color:#4d4de5}.ghost{background:#fff;border:1px solid #dddfea}
+.hero{padding:72px 0;background:linear-gradient(135deg,#ececff,#fff 55%,#eafaf1)}h1{font-size:clamp(40px,7vw,68px);line-height:1;letter-spacing:-3px;margin:0 0 18px}.hero p{color:#656d7c;max-width:620px;font-size:17px}.hero .btn{margin-top:14px}
+section{padding:44px 0}.head{display:flex;justify-content:space-between;align-items:end;margin-bottom:20px}.head h2{margin:0;font-size:29px}.muted{color:#737b8c;font-size:14px}
+.search{display:flex;gap:9px;margin-bottom:16px}.search input,.field input,.field textarea,.field select{width:100%;padding:13px;border:1px solid #dddfea;border-radius:11px;background:#fff;font:inherit;outline:none}.search input:focus,.field input:focus,.field textarea:focus{border-color:#5b5bf7}
+.cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}.cat{padding:8px 12px;border:1px solid #dddfea;border-radius:999px;background:#fff;cursor:pointer;font-weight:700;font-size:13px}.cat.on{background:#171923;color:#fff;border-color:#171923}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:#fff;border:1px solid #e5e7ee;border-radius:17px;overflow:hidden}.pic{height:170px;background:#eef0f7;display:grid;place-items:center;font-size:48px}.body{padding:14px}.body h3{margin:0 0 5px;font-size:15px}.price{font-size:18px;font-weight:900}.seller{font-size:12px;color:#777f90;margin:7px 0 11px}
+.empty{text-align:center;padding:45px;color:#777f90;grid-column:1/-1}.panel{background:#fff;border:1px solid #e5e7ee;border-radius:18px;padding:22px}.modal{display:none;position:fixed;inset:0;background:#0008;z-index:20;padding:18px;place-items:center}.modal.show{display:grid}.box{width:min(480px,100%);background:#fff;border-radius:18px;padding:22px;max-height:92vh;overflow:auto}.top{display:flex;justify-content:space-between;align-items:center}.x{border:0;background:#eef0f3;border-radius:9px;width:34px;height:34px;font-size:18px}.field{margin:11px 0}.field label{font-size:13px;font-weight:700;display:block;margin-bottom:5px}.field textarea{min-height:90px;resize:vertical}.msg{padding:10px;border-radius:10px;background:#fff2d9;color:#805b00;font-size:13px;display:none}.account{font-size:13px;color:#5e6675}.danger{color:#c62828}
+footer{padding:30px 0;border-top:1px solid #e5e7ee;color:#777f90;font-size:13px}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.links{display:none}.hero{padding:52px 0}}@media(max-width:500px){.grid{grid-template-columns:1fr}.search{flex-direction:column}h1{letter-spacing:-2px}.actions .ghost{display:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><nav>
+<a class="logo" href="#">Zero <i>Store</i></a>
+<div class="links"><a href="#barang">Barang</a><a href="#cara">Cara Kerja</a></div>
+<div class="actions"><span class="account" id="account"></span><button class="btn soft" id="loginBtn" onclick="openAuth()">Masuk</button><button class="btn primary" onclick="openSell()">+ Jual</button></div>
+</nav></div></header>
+
+<section class="hero"><div class="wrap">
+<h1>Jual beli lebih<br><span style="color:#5b5bf7">simple.</span></h1>
+<p>Zero Store adalah marketplace untuk menemukan barang, memasang listing, dan menghubungi penjual secara langsung.</p>
+<button class="btn primary" onclick="document.getElementById('barang').scrollIntoView()">Mulai Cari Barang</button>
+</div></section>
+
+<section id="barang"><div class="wrap">
+<div class="head"><div><h2>Listing terbaru</h2><div class="muted" id="count">Memuat...</div></div></div>
+<div class="search"><input id="q" placeholder="Cari barang..." oninput="loadListings()"><button class="btn primary" onclick="loadListings()">Cari</button></div>
+<div class="cats"><button class="cat on" onclick="setCat(this,'')">Semua</button><button class="cat" onclick="setCat(this,'Akun Game')">🎮 Akun Game</button><button class="cat" onclick="setCat(this,'Elektronik')">📱 Elektronik</button><button class="cat" onclick="setCat(this,'Fashion')">👕 Fashion</button><button class="cat" onclick="setCat(this,'Lainnya')">📦 Lainnya</button></div>
+<div class="grid" id="grid"><div class="empty">Memuat listing...</div></div>
+</div></section>
+
+<section id="cara"><div class="wrap"><div class="head"><div><h2>Cara kerja</h2><div class="muted">Semua data tersimpan di database Zero Store.</div></div></div>
+<div class="grid" style="grid-template-columns:repeat(3,1fr)"><div class="panel"><b>1. Daftar</b><p class="muted">Buat akun agar bisa memasang dan mengelola listing.</p></div><div class="panel"><b>2. Pasang barang</b><p class="muted">Isi judul, kategori, harga, foto, dan deskripsi.</p></div><div class="panel"><b>3. Deal</b><p class="muted">Pembeli menghubungi penjual melalui WhatsApp.</p></div></div>
+</div></section>
+<footer><div class="wrap">© 2026 Zero Store. Marketplace independen.</div></footer>
+
+<div class="modal" id="auth"><div class="box"><div class="top"><h2 id="authTitle">Masuk</h2><button class="x" onclick="closeAll()">×</button></div><div class="msg" id="authMsg"></div>
+<div class="field"><label>Email</label><input id="email" type="email" placeholder="kamu@email.com"></div><div class="field"><label>Password</label><input id="pass" type="password" placeholder="Minimal 8 karakter"></div>
+<button class="btn primary" style="width:100%" onclick="submitAuth()">Masuk</button><p class="muted" style="text-align:center">Belum punya akun? <a href="#" onclick="toggleAuth();return false" style="color:#4d4de5;font-weight:700">Daftar</a></p></div></div>
+
+<div class="modal" id="sell"><div class="box"><div class="top"><h2>Pasang Barang</h2><button class="x" onclick="closeAll()">×</button></div><div class="msg" id="sellMsg"></div>
+<div class="field"><label>Judul</label><input id="title" placeholder="Contoh: iPhone 15 128GB"></div>
+<div class="field"><label>Kategori</label><select id="category"><option>Akun Game</option><option>Elektronik</option><option>Fashion</option><option>Lainnya</option></select></div>
+<div class="field"><label>Harga (Rupiah)</label><input id="price" type="number" min="0" placeholder="2500000"></div>
+<div class="field"><label>URL foto</label><input id="image" placeholder="https://.../foto.jpg"></div>
+<div class="field"><label>Nomor WhatsApp</label><input id="wa" placeholder="628123456789"></div>
+<div class="field"><label>Deskripsi</label><textarea id="desc" placeholder="Jelaskan kondisi dan detail barang"></textarea></div>
+<button class="btn primary" style="width:100%" onclick="createListing()">Terbitkan Listing</button></div></div>
+
+<script>
+let cat='',authMode='login';
+const money=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n);
+function setCat(el,v){document.querySelectorAll('.cat').forEach(x=>x.classList.remove('on'));el.classList.add('on');cat=v;loadListings()}
+async function api(path,opt={}){const r=await fetch(path,{credentials:'include',headers:{'Content-Type':'application/json',...(opt.headers||{})},...opt});let d={};try{d=await r.json()}catch{}if(!r.ok)throw Error(d.error||'Terjadi kesalahan');return d}
+async function loadMe(){try{const d=await api('/api/me');document.getElementById('account').textContent=d.user?'👤 '+d.user.email:'';document.getElementById('loginBtn').textContent=d.user?'Keluar':'Masuk';document.getElementById('loginBtn').onclick=d.user?logout:openAuth}catch{}}
+async function loadListings(){const q=document.getElementById('q').value;try{const d=await api('/api/listings?q='+encodeURIComponent(q)+'&category='+encodeURIComponent(cat));document.getElementById('count').textContent=d.listings.length+' listing';const g=document.getElementById('grid');g.innerHTML='';if(!d.listings.length){g.innerHTML='<div class="empty">Belum ada listing yang cocok.</div>';return}d.listings.forEach(p=>{const c=document.createElement('article');c.className='card';c.innerHTML=`<div class="pic">${p.image?`<img src="${esc(p.image)}" style="width:100%;height:100%;object-fit:cover" loading="lazy">`:'📦'}</div><div class="body"><h3>${esc(p.title)}</h3><div class="muted">${esc(p.category)}</div><div class="price">${money(p.price)}</div><div class="seller">👤 ${esc(p.seller)}</div><button class="btn soft" style="width:100%" onclick="contact('${escAttr(p.wa)}','${escAttr(p.title)}')">Hubungi Penjual</button></div>`;g.appendChild(c)})}catch(e){document.getElementById('grid').innerHTML='<div class="empty">Backend belum terhubung. Ikuti README untuk memasang database.</div>'}}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function escAttr(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
+function openAuth(){authMode='login';document.getElementById('authTitle').textContent='Masuk';document.querySelector('#auth .btn').textContent='Masuk';document.getElementById('auth').classList.add('show')}
+function toggleAuth(){authMode=authMode==='login'?'register':'login';document.getElementById('authTitle').textContent=authMode==='login'?'Masuk':'Daftar';document.querySelector('#auth .btn').textContent=authMode==='login'?'Masuk':'Daftar'}
+function openSell(){api('/api/me').then(d=>{if(!d.user){openAuth();return}document.getElementById('sell').classList.add('show')}).catch(openAuth)}
+function closeAll(){document.querySelectorAll('.modal').forEach(x=>x.classList.remove('show'))}
+async function submitAuth(){const msg=document.getElementById('authMsg');msg.style.display='none';try{await api('/api/'+(authMode==='login'?'login':'register'),{method:'POST',body:JSON.stringify({email:email.value,password:pass.value})});closeAll();await loadMe();await loadListings()}catch(e){msg.textContent=e.message;msg.style.display='block'}}
+async function createListing(){const msg=document.getElementById('sellMsg');msg.style.display='none';try{await api('/api/listings',{method:'POST',body:JSON.stringify({title:title.value,category:category.value,price:Number(price.value),image:image.value,wa:wa.value,description:desc.value})});closeAll();await loadListings();alert('Listing berhasil diterbitkan.')}catch(e){msg.textContent=e.message;msg.style.display='block'}}
+async function logout(){await api('/api/logout',{method:'POST'});await loadMe();loadListings()}
+function contact(n,t){if(!n){alert('Nomor WhatsApp belum diisi.');return}location.href='https://wa.me/'+n.replace(/\D/g,'')+'?text='+encodeURIComponent('Halo, saya tertarik dengan '+t+' di Zero Store.')}
+loadMe();loadListings();
+</script>
+</body></html>
