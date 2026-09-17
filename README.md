@@ -1,27 +1,33 @@
-# Zero Store — versi production-ready
+# Zero Store — Upgrade 1
 
-Ini bukan versi demo: listing disimpan di Cloudflare D1, akun memakai password hashing PBKDF2, sesi memakai cookie HttpOnly, dan listing dapat dipublikasikan melalui API.
+Marketplace akun game dengan tampilan dark gaming merah/hitam.
+
+## Yang baru
+- UI responsive mobile-first dengan tema Zero Store.
+- Marketplace khusus akun game.
+- Kategori: Free Fire, Mobile Legends, PUBG Mobile, Valorant, Roblox, Genshin Impact, dan Game Lainnya.
+- Search akun, filter game, dan sorting harga.
+- Detail listing dengan rank, level, jumlah skin/item, deskripsi, dan kontak WhatsApp.
+- Form jual akun yang lebih spesifik untuk akun game.
+- Backend listing tetap memakai Cloudflare D1 dan autentikasi cookie HttpOnly.
 
 ## Struktur
-- `public/index.html` — website
-- `worker.js` — backend API
-- `schema.sql` — database
-- `wrangler.toml` — konfigurasi Cloudflare Workers
+- `public/index.html` — frontend.
+- `worker.js` — backend API.
+- `schema.sql` — schema database untuk instalasi baru.
+- `migration-upgrade-1.sql` — migrasi untuk database lama.
+- `wrangler.toml` — konfigurasi Cloudflare Workers.
 
-## Deploy Cloudflare
+## Jika database kamu SUDAH ada
+Jalankan `migration-upgrade-1.sql` sekali di D1 agar kolom `rank`, `level`, dan `skins` tersedia.
 
-1. Buat D1 Database bernama `zero-store-db`.
-2. Jalankan `schema.sql` pada database tersebut.
-3. Salin Database ID ke `wrangler.toml`.
-4. Pastikan `public/index.html` berada di folder `public/`.
-5. Deploy project dengan Wrangler:
-   `npx wrangler deploy`
-6. Setelah deploy, buka domain Workers kamu.
+## Jika database masih baru
+Jalankan `schema.sql`.
 
-Jika kamu menggunakan dashboard Cloudflare tanpa terminal, cara termudah adalah memakai GitHub dan menghubungkan repository ke Workers Builds, lalu menambahkan D1 binding `DB` pada Settings > Bindings.
+## Deploy
+1. Pastikan `wrangler.toml` memakai Database ID D1 milikmu.
+2. Pastikan binding D1 bernama `DB`.
+3. Jalankan `npx wrangler deploy`.
 
-## Catatan penting sebelum dibuka untuk publik
-- Untuk foto barang, versi ini menerima URL gambar. Untuk marketplace produksi, sebaiknya pindahkan upload gambar ke Cloudflare R2.
-- Untuk pembayaran/escrow, integrasikan payment gateway resmi; jangan menyimpan data kartu di aplikasi.
-- Tambahkan verifikasi email, rate limiting, moderasi listing, laporan penipuan, dan backup database sebelum transaksi bernilai tinggi.
-- Nomor WhatsApp dipublikasikan pada listing agar pembeli dapat menghubungi penjual.
+## Catatan
+Versi ini menggunakan URL gambar seperti versi sebelumnya. Untuk produksi, upload gambar sebaiknya dipindahkan ke object storage seperti R2. Untuk transaksi, gunakan payment gateway/escrow resmi bila diperlukan dan jangan menyimpan password atau OTP akun game di Zero Store.

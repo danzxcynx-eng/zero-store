@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS listings (
   image TEXT,
   wa TEXT NOT NULL,
   description TEXT,
+  rank TEXT,
+  level INTEGER DEFAULT 0,
+  skins INTEGER DEFAULT 0,
   status TEXT NOT NULL DEFAULT 'active',
   created_at INTEGER NOT NULL,
   FOREIGN KEY(user_id) REFERENCES users(id)
